@@ -1,73 +1,35 @@
 const express = require('express');
+const bodyparser = require('body-parser')
 const router = express.Router();
-
-router.get('/students/:name', function(req, res) {
-    let studentName = req.params.name
-    console.log(studentName)
-    res.send(studentName)
-})
-
-router.get("/random" , function(req, res) {
-    res.send("hi there")
-})
-
-
-router.get("/test-api" , function(req, res) {
-    res.send("hi FunctionUp")
-})
-
-
-router.get("/test-api-2" , function(req, res) {
-    res.send("hi FunctionUp. This is another cool API")
-})
-
-
-router.get("/test-api-3" , function(req, res) {
-    res.send("hi FunctionUp. This is another cool API. And NOw i am bored of creating API's ")
-})
-
-
-router.get("/test-api-4" , function(req, res) {
-    res.send("hi FunctionUp. This is another cool API. And NOw i am bored of creating API's. PLZ STOP CREATING MORE API;s ")
-})
-
-
-
-router.get("/test-api-5" , function(req, res) {
-    res.send("hi FunctionUp5. This is another cool API. And NOw i am bored of creating API's. PLZ STOP CREATING MORE API;s ")
-})
-
-router.get("/test-api-6" , function(req, res) {
-    res.send({a:56, b: 45})
-})
-
-router.post("/test-post", function(req, res) {
-    res.send([ 23, 45 , 6])
-})
-
-
-router.post("/test-post-2", function(req, res) {
-    res.send(  { msg: "hi" , status: true }  )
-})
-
-router.post("/test-post-3", function(req, res) {
-    // let id = req.body.user
-    // let pwd= req.body.password
-
-    // console.log( id , pwd)
-
-    console.log( req.body )
-
-    res.send(  { msg: "hi" , status: true }  )
-})
-
-
-
-router.post("/test-post-4", function(req, res) {
-    let arr= [ 12, "functionup"]
-    let ele= req.body.element
-    arr.push(ele)
-    res.send(  { msg: arr , status: true }  )
-})
-
-module.exports = router;
+const lodash = require('lodash')
+router.get('/test-me1', function (req, res) {
+            const array = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+            const b = lodash.chunk(array,3);
+            console.log(b);
+            res.send("lodash package succesful");
+        });
+       
+        router.get('/test-me2', function (req, res) {
+            const array1 = [1,3,5,7,9,11,13,15,17,19]
+            const b = lodash.tail(array1);
+            console.log(b);
+            res.send("lodash package succesful");
+        });
+        router.get('/test-me3', function (req, res) {
+            const array2 = [1,3,5,7,9];
+            const array3 = [1,2,5,8,9];
+            const array4 = [1,5,10,12,15];
+            const array5 = [0,9,67,27,35];
+            const array6 = [5,37,8,78,76];
+            const b = lodash.union(array2,array3,array4,array5,array6);
+            console.log(b);
+            res.send("lodash package succesful");
+        });
+        router.get('/test-me4', function (req, res) {
+            const array7 = [["horror","The Shining"],["drama","Titanic"],["thriller","Shutter Island"],["fantasy","Pans Labyrinth"]];
+            const b = lodash.fromPairs(array7);
+            console.log(b);
+            res.send("lodash package succesful");
+        });
+    
+ module.exports = router;
