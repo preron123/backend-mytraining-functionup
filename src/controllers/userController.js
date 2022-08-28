@@ -18,9 +18,16 @@ const commonHandler = async function(req, res, next) {
     next()
     //res.send({status: true, msg: "Hi there!"})
 }
+const mycode = async function(req, res, next){
+    let mydata= req.body
+    console.log(mydata)
+    next()
+    
+}
+
 
 module.exports.commonHandler = commonHandler
-
+module.exports.mycode = mycode
 
 
 
