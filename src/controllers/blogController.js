@@ -2,6 +2,7 @@ const authorModel = require("../models/authorModel")
 const blogModel = require("../models/blogModel")
 const mongoose = require('mongoose');
 
+//<---------------This function used for creating a Blog--------------->//
 
 const createBlog = async (req, res) => {
 
