@@ -3,15 +3,18 @@ const jwt = require("jsonwebtoken");
 const { default: mongoose } = require('mongoose');
 const passValidator = require('password-validator');
 const emailValidator = require('email-validator')
-const nodemailer = require("nodemailer")
+
 
 
 const createAuthor = async function (req, res) {
     try {
         let author = req.body
+        //<------Checking Whether Request Body is empty or not----------->//
         if (Object.keys(author).length == 0) {
             return res.status(400).send({ status: false, msg: "Invalid request Please provide valid Author  details" });
         }
+
+            //<-------Validation of author Body----------->//
 
         if (!author.fname) return res.status(400).send({ msg: " First name is required " })
         if (!author.lname) return res.status(400).send({ msg: " Last name is required " })
@@ -19,56 +22,42 @@ const createAuthor = async function (req, res) {
         if (!author.password) return res.status(400).send({ msg: " password is required " })
         let titleEnum = ['Mr', 'Mrs', 'Miss']
 
+          //<-------Validation of Title----------->//
         if (!titleEnum.includes(author.title)) {
             res.status(400).send({ status: false, msg: "title should be Mr, Mrs or Miss" })
         }
+
+         //<-------Validation of email--formate----------->//
 
         if (!emailValidator.validate(author.email)) {
             return res.status(400).send({ status: false, msg: "Check the format of the given email" })
         }
 
+        //<-------Validation of email--already-present-or-not----------->//
+
         let emailValidation = await authorModel.findOne({ email: author.email })
         if (emailValidation) {
             return res.status(409).send({ status: false, msg: "This  email  already exists " })
         }
-
+             //<-------Validation of password--minimum-length----------->//
         const schema = new passValidator();
         schema.is().min(6)
         if (!schema.validate(author.password)) {
             return res.status(400).send({ status: false, msg: "minimum length of password should be 6 characters" })
         }
+
+        //<-------Validation of password--maximum-length----------->//
         schema.is().max(12)
         if (!schema.validate(author.password)) {
             return res.status(400).send({ status: false, msg: "max length of password should be 12 characters" })
         }
-
+          //<-------Validation of password--space-not-allow---------->//
         schema.has().not().spaces()
         if (!schema.validate(author.password)) {
             return res.status(400).send({ status: false, msg: "space not allowed in password" })
         }
 
         let authorCreated = await authorModel.create(author)
-
-        const transporter= nodemailer.createTransport({
-          service:"hotmail",
-          auth:{
-            user: "blogprojecttesting@outlook.com",
-            pass:"Blog12345@"
-          }  
-        })
-const Options ={
-    from: "blogprojecttesting@outlook.com",
-    to: author.email,
-    subject:"User Created Sucessfully",
-    text : "Congratulation , your account has been created"
-    
-}
-
-transporter.sendMail(Options , function(error){
-    if(error) console.log(error)
-    return
-})
-
 
 
         res.status(201).send({ data: authorCreated })
@@ -101,7 +90,10 @@ const login = async function (req, res) {
 
         let loggedAuthor = await authorModel.findOne({ email: email, password: password })
         if (!loggedAuthor) return res.status(404).send({ msg: "Email or Password is Incorrect!" })
-
+            
+        
+        
+        //<------token creation----------->//
 
         let token = jwt.sign(
             {
@@ -109,7 +101,7 @@ const login = async function (req, res) {
                 batch: "plutonium",
                 project: "Blog-Project"
             },
-            "Secret-Key" ,{ expiresIn: '12h'}
+            "Secret-Key-preronagorai" ,{ expiresIn: '12h'}
         )
 
         res.status(200).send({ msg: "User logged in successfully!", loggedAuthor, token })
@@ -123,24 +115,13 @@ const login = async function (req, res) {
 
 
 
-
-
-
-
-
-
-
-
-
-
 module.exports.createAuthor = createAuthor;
 module.exports.login = login
 
 
 
 
-// const authorModel = require("../models/authorModel")
-// const jwt = require('jsonwebtoken')
+
 
 
 // const isValid = function (value) {
@@ -241,5 +222,3 @@ module.exports.login = login
 // }
 
 
-// module.exports.createAuthor = createAuthor;
-// module.exports.loginAuthor = loginAuthor;

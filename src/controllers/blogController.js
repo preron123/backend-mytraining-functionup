@@ -4,11 +4,15 @@ const mongoose = require('mongoose');
 
 
 const createBlog = async (req, res) => {
+
     try {
         let Blog = req.body
+        //<-------Checking Whether Request Body is empty or not----------->//
         if (Object.keys(Blog).length == 0) {
             return res.status(400).send({ status: false, msg: "Invalid request Please provide valid Author  details" });
         }
+        
+        //<-------Validation of Blog Body----------->//
         if (!Blog.title) return res.status(400).send({ msg: " title is required " })
         if (!Blog.body) return res.status(400).send({ msg: "body is required " })
         if (!Blog.authorId) return res.status(400).send({ msg: " authorId is required " })
@@ -24,11 +28,14 @@ const createBlog = async (req, res) => {
 }
 
 
+//<---------------This function used for Fetching a Blog--------------->//
+
 const getBlogsData = async (req, res) => {
     try {
 
+        
         let input = req.query.authorId
-
+          //<------Acquiring UserId from Decoded Token------->//
         let isValid = mongoose.Types.ObjectId.isValid(input)
         if (!isValid) return res.status(400).send({ msg: "enter valid authorid" })
 
@@ -57,6 +64,7 @@ const getBlogsData = async (req, res) => {
     }
 }
 
+//<---------------This function used for updating a Blog--------------->//
 const updateBlog = async (req, res) => {
     try {
         let inputId = req.params.blogId
@@ -93,7 +101,7 @@ const updateBlog = async (req, res) => {
 
         
 
-
+//<---------------This function used for deleting  Blogs--------------->//
         
 
 const deleteBlog = async (req, res) => {
@@ -119,7 +127,7 @@ const deleteBlog = async (req, res) => {
     }
 }
 
-
+//<---------------This function used for  deleting Blogs by querry--------------->//
 
 const  deleteBlogQuery = async (req, res) => {
     try {
@@ -149,12 +157,31 @@ module.exports.deleteBlog = deleteBlog
 module.exports.deleteBlogQuery = deleteBlogQuery
 
 
-// const blogModel = require("../models/blogModel")
-// const authorModel = require("../models/authorModel")
-// const moment = require('moment')
-// const mongoose = require("mongoose")
-// const ObjectId = mongoose.Types.ObjectId
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// team member -navdeep code 
 
 // const isValid = function (value) {
 //     if (typeof value === 'undefined' || value === null) return false
@@ -358,11 +385,6 @@ module.exports.deleteBlogQuery = deleteBlogQuery
 //     }
 // }
 
-// module.exports.createBlog = createBlog;
-// //module.exports.getBlogsData = getBlogsData;
-// module.exports.updateBlog = updateBlog;
-// module.exports.deleteBlog = deleteBlog;
-// module.exports.deleteByQueryParam = deleteByQueryParam;
 
 
 
@@ -383,32 +405,10 @@ module.exports.deleteBlogQuery = deleteBlogQuery
 
 
 
-
-// const authorModel = require("../models/authorModel")
-// const blogModel = require("../models/blogModel")
-// const mongoose = require('mongoose');
 
 
  
-// const createBlog = async (req, res) => {
-//     try {
-//         let Blog = req.body
-//         if (Object.keys(Blog).length == 0) {
-//             return res.status(400).send({ status: false, msg: "Invalid request Please provide valid Author  details" });
-//         }
-//         if (!Blog.title) return res.status(400).send({ msg: " title is required " })
-//         if (!Blog.body) return res.status(400).send({ msg: "body is required " })
-//         if (!Blog.authorId) return res.status(400).send({ msg: " authorId is required " })
-//         if (!Blog.category) return res.status(400).send({ msg: " category is require" })
 
-
-//         let blogCreated = await blogModel.create(Blog)
-
-//         res.status(201).send({ status: true, data: blogCreated })
-//     } catch (error) {
-//         res.status(500).send({ msg: error.message })
-//     }
-// }
 
 
 
