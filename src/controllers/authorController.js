@@ -101,7 +101,7 @@ const login = async function (req, res) {
                 batch: "plutonium",
                 project: "Blog-Project"
             },
-            "Secret-Key-preronagorai" ,{ expiresIn: '12h'}
+            "Secret-Key" ,{ expiresIn: '12h'}
         )
 
         res.status(200).send({ msg: "User logged in successfully!", loggedAuthor, token })
