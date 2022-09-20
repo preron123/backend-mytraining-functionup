@@ -37,9 +37,9 @@ const createAuthor = async function (req, res) {
 
         let emailValidation = await authorModel.findOne({ email: author.email })
         if (emailValidation) {
-            return res.status(409).send({ status: false, msg: "This  email  already exists " })
+            return res.status(400).send({ status: false, msg: "This  email  already exists " })
         }
-             //<-------Validation of password--minimum-length----------->//
+        //      //<-------Validation of password--minimum-length----------->//
         const schema = new passValidator();
         schema.is().min(6)
         if (!schema.validate(author.password)) {
@@ -60,7 +60,7 @@ const createAuthor = async function (req, res) {
         let authorCreated = await authorModel.create(author)
 
 
-        res.status(201).send({ data: authorCreated })
+    res.status(201).send({ status : true , data: authorCreated })
     } catch (error) {
         res.status(500).send({ msg: error.message })
     }
@@ -81,7 +81,7 @@ const login = async function (req, res) {
             return res.status(400).send({
                 status: false,
                 msg: "please provide login details",
-            });
+            });o
         }
 
         if (!email) return res.status(400).send({ msg: " email is required " })
