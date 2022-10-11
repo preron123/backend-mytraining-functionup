@@ -40,5 +40,5 @@ const isEmpty = (value) => {
   };
 
   module.exports={
-    isEmpty,isValidEmail,isValidPhone,isValidPassword,isValidPincode
+    isEmpty,isValidEmail,isValidPhone,isValidPassword,isValidPincode,isValidObjectId
   }
