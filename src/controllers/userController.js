@@ -1,8 +1,9 @@
 const userModel = require('../models/userModel');
-const isValid = require('../utils/validation')
 const bcrypt = require('bcrypt');
 const aws = require("../utils/aws")
 const jwt = require('jsonwebtoken')
+const {isEmpty,isValidEmail,isValidPhone,isValidPassword,isValidPincode,isValidObjectId}=require('../utils/validation')
+
 
 const createUser = async (req, res) => {
     try {
@@ -13,17 +14,17 @@ const createUser = async (req, res) => {
             return res.status(400).send({ status: false, message: "Please Enter Some Input" });
         }
 
-        if (!isValid.isEmpty(fname)) {
-            return res.status(400).send({ status: false, message: "fname Is Mandatory" });
+        if (!isEmpty(fname)) {
+            return res.status(400).send({ status: false, message: "fname Is Mandatory/String only" });
         }
-        if (!isValid.isEmpty(lname)) {
-            return res.status(400).send({ status: false, message: "lname Is Mandatory" });
+        if (!isEmpty(lname)) {
+            return res.status(400).send({ status: false, message: "lname Is Mandatory/String only" });
         }
         //validation for email
-        if (!isValid.isEmpty(email)) {
-            return res.status(400).send({ status: false, message: "email Is Mandatory" });
+        if (!isEmpty(email)) {
+            return res.status(400).send({ status: false, message: "email Is Mandatory/String only" });
         }
-        if (!isValid.isValidEmail(email)) {
+        if (!isValidEmail(email)) {
             return res.status(400).send({ status: false, message: "Invalid Email" });
         }
         //validation for profileImage
@@ -36,50 +37,45 @@ const createUser = async (req, res) => {
             return res.status(400).send({ status: false, message: "no profileImage added" });
         }
         //validation for phone 
-        if (!isValid.isEmpty(phone)) {
-            return res.status(400).send({ status: false, message: "phone Is Mandatory" });
+        if (!isEmpty(phone)) {
+            return res.status(400).send({ status: false, message: "phone Is Mandatory/String only" });
         }
-        if (!isValid.isValidPhone(phone)) {
+        if (!isValidPhone(phone)) {
             return res.status(400).send({ status: false, message: "Invalid phone" });
         }
         //validation for password
-        if (!isValid.isEmpty(password)) {
-            return res.status(400).send({ status: false, message: "password Is Mandatory" });
+        if (!isEmpty(password)) {
+            return res.status(400).send({ status: false, message: "password Is Mandatory/String only" });
         }
-        if (!isValid.isValidPassword(password)) {
+        if (!isValidPassword(password)) {
             return res.status(400).send({ status: false, message: "Password is in Invalid formate,Minimum eight and maximum 15 characters, at least one uppercase letter, one lowercase letter, one number and one special character" })
         }
-
+//bcrypt password
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
 
-
-        address = JSON.parse(address)
-
-
         // //validation for address
+        address = JSON.parse(address)
         if (Object.prototype.toString.call(address) !== "[object Object]" || Object.keys(address).length == 0) {
             return res.status(400).send({ status: false, message: "Address  Is Mandatory / Object type only " })
         }
+
         let { shipping, billing } = address
-
-
-
         // //vlidation for shipping
         if (Object.prototype.toString.call(shipping) !== "[object Object]" || Object.keys(shipping).length == 0) {
             return res.status(400).send({ status: false, message: "shipping Is Mandatory / Object type only " })
         }
 
-        if (!isValid.isEmpty(shipping.street)) {
-            return res.status(400).send({ status: false, message: "street Is Mandatory" });
+        if (!isEmpty(shipping.street)) {
+            return res.status(400).send({ status: false, message: "street Is Mandatory/String only" });
         }
-        if (!isValid.isEmpty(shipping.city)) {
-            return res.status(400).send({ status: false, message: "city Is Mandatory" });
+        if (!isEmpty(shipping.city)) {
+            return res.status(400).send({ status: false, message: "city Is Mandatory/String only" });
         }
         if (!shipping.pincode) {
             return res.status(400).send({ status: false, message: "pincode Is Mandatory" });
         }
-        if (!isValid.isValidPincode(shipping.pincode)) {
+        if (!isValidPincode(shipping.pincode)) {
             return res.status(400).send({ status: false, msg: "Invalid pincode / Numbers only" })
         }
 
@@ -87,16 +83,16 @@ const createUser = async (req, res) => {
         if (Object.prototype.toString.call(billing) !== "[object Object]" || Object.keys(billing).length == 0) {
             return res.status(400).send({ status: false, message: "billing Is Mandatory / Object type only " })
         }
-        if (!isValid.isEmpty(billing.street)) {
-            return res.status(400).send({ status: false, message: "street Is Mandatory" });
+        if (!isEmpty(billing.street)) {
+            return res.status(400).send({ status: false, message: "street Is Mandatory/String only" });
         }
-        if (!isValid.isEmpty(billing.city)) {
-            return res.status(400).send({ status: false, message: "city Is Mandatory" });
+        if (!isEmpty(billing.city)) {
+            return res.status(400).send({ status: false, message: "city Is Mandatory/String only" });
         }
         if (!billing.pincode) {
             return res.status(400).send({ status: false, message: "pincode Is Mandatory" });
         }
-        if (!isValid.isValidPincode(billing.pincode)) {
+        if (!isValidPincode(billing.pincode)) {
             return res.status(400).send({ status: false, msg: "Invalid pincode / Numbers only" })
         }
 
@@ -125,19 +121,19 @@ const login = async (req, res) => {
     try {
         let data = req.body;
         let { email, password } = data
-        let userId = false;
+
         //validation for email
-        if (!isValid.isEmpty(email)) {
-            return res.status(400).send({ status: false, message: "email Is Mandatory" });
+        if (!isEmpty(email)) {
+            return res.status(400).send({ status: false, message: "email Is Mandatory/String only" });
         }
-        if (!isValid.isValidEmail(email)) {
+        if (!isValidEmail(email)) {
             return res.status(400).send({ status: false, message: "Invalid Email" });
         }
         //validation for password
-        if (!isValid.isEmpty(password)) {
-            return res.status(400).send({ status: false, message: "password Is Mandatory" });
+        if (!isEmpty(password)) {
+            return res.status(400).send({ status: false, message: "password Is Mandatory/String only" });
         }
-        if (!isValid.isValidPassword(password)) {
+        if (!isValidPassword(password)) {
             return res.status(400).send({ status: false, message: "Password is in Invalid formate,Minimum eight and maximum 15 characters, at least one uppercase letter, one lowercase letter, one number and one special character" })
         }
         let user = await userModel.findOne({ email });
@@ -150,9 +146,9 @@ const login = async (req, res) => {
         if (!correctPass) {
             return res.status(400).send({ status: false, message: "Invalid Password" });
         }
-
-        const token = jwt.sign({ userId: user._idd }, "narshdnfjdfnfvnfn", { expiresIn: "1d" });
-        res.status(200).send({ status: true, message: "User logged in successfully", data: { userId: user._id, token } });
+        let userId = user._id;
+        const token = jwt.sign({ userId: userId }, "narshdnfjdfnfvnfn", { expiresIn: "1d" });
+        res.status(200).send({ status: true, message: "User logged in successfully", data: { userId: userId, token } });
     }
     catch (err) {
         res.status(500).send({ status: false, message: err.message });
@@ -164,8 +160,8 @@ const getUser = async (req, res) => {
     try {
         let userId = req.params.userId
 
-        if (!isValid.isValidObjectId(userId)) {
-            return res.status(400).send({ status: false, message: "Invalid userid" })
+        if (!isValidObjectId(userId)) {
+            return res.status(400).send({ status: false, message: "Invalid userId" })
         }
 
         let findUser = await userModel.findById(userId)
@@ -183,13 +179,14 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         let userId = req.params.userId
-        if (!isValid.isValidObjectId(userId)) {
-            return res.status(400).send({ status: false, message: "Invalid userid" })
+
+        if (!isValidObjectId(userId)) {
+            return res.status(400).send({ status: false, message: "Invalid userId" })
         }
         let { fname, lname, email, phone, password, profileImage, address } = req.body
-console.log(req.userId,userId)
+
         //authrentication
-        if(req.userId!==userId){
+        if (req.userId !== userId) {
             return res.status(403).send({ status: false, message: "Authorization failed" });
         }
         //validation for emptyBody
@@ -198,18 +195,18 @@ console.log(req.userId,userId)
         }
 
         if (fname) {
-            if (!isValid.isEmpty(fname)) {
-                return res.status(400).send({ status: false, message: "fname Is Invalid" });
+            if (!isEmpty(fname)) {
+                return res.status(400).send({ status: false, message: "fname Is Invalid/String only" });
             }
         }
         if (lname) {
-            if (!isValid.isEmpty(lname)) {
-                return res.status(400).send({ status: false, message: "lname Is Invalid" });
+            if (!isEmpty(lname)) {
+                return res.status(400).send({ status: false, message: "lname Is Invalid/String only" });
             }
         }
         //validation for email
         if (email) {
-            if (!isValid.isValidEmail(email)) {
+            if (!isValidEmail(email)) {
                 return res.status(400).send({ status: false, message: "Invalid Email" });
             }
         }
@@ -226,13 +223,13 @@ console.log(req.userId,userId)
         }
         //validation for phone 
         if (phone) {
-            if (!isValid.isValidPhone(phone)) {
+            if (!isValidPhone(phone)) {
                 return res.status(400).send({ status: false, message: "Invalid phone" });
             }
         }
         //validation for password
         if (password) {
-            if (!isValid.isValidPassword(password)) {
+            if (!isValidPassword(password)) {
                 return res.status(400).send({ status: false, message: "Password is in Invalid formate,Minimum eight and maximum 15 characters, at least one uppercase letter, one lowercase letter, one number and one special character" })
             }
         }
@@ -244,7 +241,7 @@ console.log(req.userId,userId)
         if (address) {
             address = JSON.parse(address)
             if (Object.prototype.toString.call(address) !== "[object Object]" || Object.keys(address).length == 0) {
-                return res.status(400).send({ status: false, message: "Address  Is Mandatory / Object type only " })
+                return res.status(400).send({ status: false, message: "Address  is Object type only/not empty" })
             }
             let { shipping, billing } = address
 
@@ -253,13 +250,13 @@ console.log(req.userId,userId)
                 if (Object.prototype.toString.call(shipping) !== "[object Object]" || Object.keys(shipping).length == 0) {
                     return res.status(400).send({ status: false, message: "shipping is Object type only/not empty " })
                 }
-                if (!isValid.isEmpty(shipping.street)) {
+                if (!isEmpty(shipping.street)) {
                     return res.status(400).send({ status: false, message: "street Is Invalid/String only" });
                 }
-                if (!isValid.isEmpty(shipping.city)) {
+                if (!isEmpty(shipping.city)) {
                     return res.status(400).send({ status: false, message: "city Is Invalid/String only" });
                 }
-                if (!isValid.isValidPincode(shipping.pincode)) {
+                if (!isValidPincode(shipping.pincode)) {
                     return res.status(400).send({ status: false, msg: "Invalid pincode / Numbers only" })
                 }
             }
@@ -268,13 +265,13 @@ console.log(req.userId,userId)
                 if (Object.prototype.toString.call(billing) !== "[object Object]" || Object.keys(billing).length == 0) {
                     return res.status(400).send({ status: false, message: "billing is Object type only/not empty" })
                 }
-                if (!isValid.isEmpty(billing.street)) {
+                if (!isEmpty(billing.street)) {
                     return res.status(400).send({ status: false, message: "street Is Invalid/String only" });
                 }
-                if (!isValid.isEmpty(billing.city)) {
+                if (!isEmpty(billing.city)) {
                     return res.status(400).send({ status: false, message: "city Is Invalid/String only" });
                 }
-                if (!isValid.isValidPincode(billing.pincode)) {
+                if (!isValidPincode(billing.pincode)) {
                     return res.status(400).send({ status: false, msg: "Invalid pincode / Numbers only" })
                 }
             }
@@ -292,7 +289,7 @@ console.log(req.userId,userId)
         }
         let dataUpdated = { fname, lname, email, phone, profileImage, address }
         dataUpdated.password = hashedPassword
-        let data = await userModel.findOneAndUpdate({ _id:userId }, {$set : dataUpdated },{new:true})
+        let data = await userModel.findOneAndUpdate({ _id: userId }, { $set: dataUpdated }, { new: true })
         return res.status(200).send({ status: true, message: "User profile updated", date: data });
     }
     catch (error) {
@@ -303,5 +300,8 @@ console.log(req.userId,userId)
 
 
 module.exports = {
-    createUser, login, getUser,updateUser
+    createUser, 
+    login, 
+    getUser, 
+    updateUser
 }

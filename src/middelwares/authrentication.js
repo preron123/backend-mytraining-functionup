@@ -11,7 +11,6 @@ const authenticationMid = (req, res, next) => {
         jwt.verify(token, secreteKey, (err, result) => {
             if (err) return res.status(401).send({ status: false, msg: err.message })
             req.userId = result.userId
-            console.log(result)
             next()
         }
         )
