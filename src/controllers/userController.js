@@ -2,7 +2,7 @@ const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const aws = require("../utils/aws")
 const jwt = require('jsonwebtoken')
-const {isEmpty,isValidEmail,isValidPhone,isValidPassword,isValidPincode,isValidObjectId}=require('../utils/validation')
+const {isEmpty,isValidEmail,isValidPhone,isValidPassword,isValidPincode,isValidObjectId,isValidName}=require('../utils/validation')
 
 
 const createUser = async (req, res) => {
@@ -17,7 +17,14 @@ const createUser = async (req, res) => {
         if (!isEmpty(fname)) {
             return res.status(400).send({ status: false, message: "fname Is Mandatory/String only" });
         }
+        if (!isValidName(fname)) {
+            return res.status(400).send({ status: false, message: "fname Is Mandatory/String only" });
+        }
+        
         if (!isEmpty(lname)) {
+            return res.status(400).send({ status: false, message: "lname Is Mandatory/String only" });
+        }
+        if (!isValidName(lname)) {
             return res.status(400).send({ status: false, message: "lname Is Mandatory/String only" });
         }
         //validation for email
@@ -116,7 +123,7 @@ const createUser = async (req, res) => {
         return res.status(500).send({ status: false, message: err.message });
     }
 }
-
+//===============================================================login====================================//
 const login = async (req, res) => {
     try {
         let data = req.body;
