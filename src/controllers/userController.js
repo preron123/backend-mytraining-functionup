@@ -51,11 +51,11 @@ const createUser = async (req, res) => {
             return res.status(400).send({ status: false, message: "Password is in Invalid formate,Minimum eight and maximum 15 characters, at least one uppercase letter, one lowercase letter, one number and one special character" })
         }
 //bcrypt password
-        const salt = await bcrypt.genSalt(10)
+        const salt = await bcrypt.genSalt(10)     //json web token for token
         const hashedPassword = await bcrypt.hash(password, salt)
 
         // //validation for address
-        address = JSON.parse(address)
+        address = JSON.parse(address)    //simple obj me converte karliye  
         if (Object.prototype.toString.call(address) !== "[object Object]" || Object.keys(address).length == 0) {
             return res.status(400).send({ status: false, message: "Address  Is Mandatory / Object type only " })
         }
