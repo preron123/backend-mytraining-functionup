@@ -2,7 +2,7 @@ const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const aws = require("../utils/aws")
 const jwt = require('jsonwebtoken')
-const {isEmpty,isValidEmail,isValidPhone,isValidPassword,isValidPincode,isValidObjectId}=require('../utils/validation')
+const { isEmpty, isValidEmail, isValidPhone, isValidPassword, isValidPincode, isValidObjectId,isValidName } = require('../utils/validation')
 
 
 const createUser = async (req, res) => {
@@ -17,7 +17,14 @@ const createUser = async (req, res) => {
         if (!isEmpty(fname)) {
             return res.status(400).send({ status: false, message: "fname Is Mandatory/String only" });
         }
+        if (!isValidName(fname)) {
+            return res.status(400).send({ status: false, message: "fname Is Mandatory/String only" });
+        }
+        
         if (!isEmpty(lname)) {
+            return res.status(400).send({ status: false, message: "lname Is Mandatory/String only" });
+        }
+        if (!isValidName(lname)) {
             return res.status(400).send({ status: false, message: "lname Is Mandatory/String only" });
         }
         //validation for email
@@ -50,8 +57,8 @@ const createUser = async (req, res) => {
         if (!isValidPassword(password)) {
             return res.status(400).send({ status: false, message: "Password is in Invalid formate,Minimum eight and maximum 15 characters, at least one uppercase letter, one lowercase letter, one number and one special character" })
         }
-//bcrypt password
-        const salt = await bcrypt.genSalt(10)     //json web token for token
+        //bcrypt password
+        const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
 
         // //validation for address
@@ -116,7 +123,7 @@ const createUser = async (req, res) => {
         return res.status(500).send({ status: false, message: err.message });
     }
 }
-
+//===============================================================login====================================//
 const login = async (req, res) => {
     try {
         let data = req.body;
@@ -183,6 +190,10 @@ const updateUser = async (req, res) => {
         if (!isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "Invalid userId" })
         }
+        let findUser = await userModel.findById(userId)
+        if (!findUser) {
+            return res.status(404).send({ status: false, message: "User not Found" })
+        }
         let { fname, lname, email, phone, password, profileImage, address } = req.body
 
         //authrentication
@@ -232,10 +243,9 @@ const updateUser = async (req, res) => {
             if (!isValidPassword(password)) {
                 return res.status(400).send({ status: false, message: "Password is in Invalid formate,Minimum eight and maximum 15 characters, at least one uppercase letter, one lowercase letter, one number and one special character" })
             }
+            const salt = await bcrypt.genSalt(10)
+            var hashedPassword = await bcrypt.hash(password, salt)
         }
-
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
 
         //validation for address
         if (address) {
@@ -300,8 +310,8 @@ const updateUser = async (req, res) => {
 
 
 module.exports = {
-    createUser, 
-    login, 
-    getUser, 
+    createUser,
+    login,
+    getUser,
     updateUser
 }
