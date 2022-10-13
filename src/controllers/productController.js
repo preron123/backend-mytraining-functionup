@@ -4,7 +4,7 @@ const { isEmpty, isValidPrice, isValidSize } = require('../utils/validation')
 
 const createProduct = async function (req, res) {
     try {
-        let { title, description, price, currencyId, currencyFormat, productImage, style, isFreeShipping, availableSizes, installments, isDeleted } = req.body;
+        let { title, description, price, currencyId, currencyFormat, style, isFreeShipping, availableSizes, installments, isDeleted } = req.body;
 
         //validation for emptyBody
         if (Object.keys(req.body).length == 0) {
@@ -38,14 +38,14 @@ const createProduct = async function (req, res) {
                 return res.status(400).send({ status: false, message: "CurrencyId is always INR/String only" })
             };
         } else {
-            currencyId = "INR"
+            req.body.currencyId = "INR"
         }
         if (currencyFormat) {
             if (currencyFormat !== "₹") {
                 return res.status(400).send({ status: false, message: "currencyFormat is always INR/String only" })
             };
         } else {
-            currencyFormat = "₹"
+            req.body.currencyFormat = "₹"
         }
         if (isFreeShipping) {
             if (typeof isFreeShipping !== "boolean") {
@@ -53,16 +53,14 @@ const createProduct = async function (req, res) {
             };
         }
         //validation for productImage and creating AWS link
-        let files = req.files;
-        // if (file && file.length > 0) {
-        //     const url = await aws.uploadFile(file[0]);
-        //     productImage = url
-        // } else {
-        //     return res.status(400).send({ status: false, message: "ProductImage Is Mandatory" });
-        // }
-        if (files.length == 0) return res.status(400).send({ status: false, message: "ProductImage is required" });
-        let productImgUrl = await aws.uploadFile(files[0]);
-        productImage = productImgUrl;
+        let file = req.files;
+        if (file && file.length > 0) {
+            const url = await aws.uploadFile(file[0]);
+            req.body.productImage = url
+        } else {
+            return res.status(400).send({ status: false, message: "ProductImage Is Mandatory" });
+        }
+
 
         if (style) {
             if (!isEmpty(style)) {
@@ -266,4 +264,4 @@ const updateProduct = async function (req, res) {
 
 
 
-module.exports = { createProduct }
+module.exports = { createProduct,getProductById }

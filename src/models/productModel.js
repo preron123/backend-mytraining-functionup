@@ -21,15 +21,16 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     currencyFormat: {
-        type: String
+        type: String,
+        required: true
     },
     isFreeShipping: {
         type: Boolean,
         default: false
     },
     productImage: {
-        type: String
-          //s3 link
+        type: String,
+        required: true,  //s3 link
     },
     style: {
         type: String
