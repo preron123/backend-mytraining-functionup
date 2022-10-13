@@ -2,7 +2,7 @@ const emailRegex=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const phoneRegex=/^[6-9]{1}[0-9]{9}$/
 const passwordRegex=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/
 const pincodeRegex=/^[1-9][0-9]{5}$/
-const nameRegex =/^[a-zA-Z '.-]*$/
+const nameRegex =/^[a-z A-Z]*$/
 const mongoose = require("mongoose")
 
 
@@ -37,10 +37,9 @@ const isValidObjectId = (data) => {
 }
 
 
-const isEmpty = (value) => {
-    if (typeof value === "undefined" || value === null) return false;
-    if (typeof value === "string" && value.trim().length === 0) return false;
-    return true;
+const isEmpty = (data) => {
+    if(typeof data =="string" && data.trim().length !==0  ) return true
+    return false;
   };
 
   module.exports={
