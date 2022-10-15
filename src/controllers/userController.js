@@ -17,7 +17,7 @@ const createUser = async (req, res) => {
         }
         if (!isValidName(fname)) {
             return res.status(400).send({ status: false, message: "fname should be alphabatical Order And String only" });
-        }
+        }r
         if (!lname) {
             return res.status(400).send({ status: false, message: "lname Is Mandatory " });
         }
