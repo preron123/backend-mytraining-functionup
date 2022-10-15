@@ -119,6 +119,64 @@ const getProductById = async (req, res) => {
 };
 
 
+const getProductsWithFilter = async (req, res) => {
+    try {
+        let { size, name, priceGreaterThan, priceLessThan, priceSort } = req.query;
+        let filterQueryData = { isDeleted: false }
+        if (size) {
+            let sizes = size.toUpperCase().split(",") //creating an array
+            filterQueryData['availableSizes'] = sizes
+            for (let i = 0; i < sizes.length; i++) {
+                if (!isValidSize(sizes[i])) {
+                    return res.status(400).send({ status: false, message: "Size should be one of these - 'S', 'XS', 'M', 'X', 'L', 'XXL', 'XL'" })
+                }
+            }
+        }
+        if (name) {
+            if (!isEmpty(name)) {
+                return res.status(400).send({ status: false, message: "Name is String only" })
+            }
+            filterQueryData['title'] = name;
+        }
+        // all type of price filter
+        if (priceGreaterThan && priceLessThan) {
+            if ((!isValidPrice(priceGreaterThan)) || (!isValidPrice(priceLessThan))) {
+                return res.status(400).send({ status: false, message: 'please provide priceGreaterThan && priceLessThan as number' });
+            }
+            filterQueryData['price'] = { $gt: priceGreaterThan, $lt: priceLessThan };
+        } else if (priceGreaterThan) {
+            if (!isValidPrice(priceGreaterThan)) {
+                return res.status(400).send({ status: false, message: 'please provide priceGreaterThan as number' });
+            }
+            filterQueryData['price'] = { $gt: priceGreaterThan };
+        } else if (priceLessThan) {
+            if (!isValidPrice(priceLessThan)) {
+                return res.status(400).send({ status: false, message: 'please provide priceLessThan as number' });
+            }
+            filterQueryData['price'] = { $lt: priceLessThan };
+        }
+        if (priceSort) {
+            if (priceSort == 1) {
+                const finalData = await productModel.find(filterQueryData).sort({ price: 1 })
+                if (finalData.length == 0) return res.status(404).send({ status: false, message: 'no product found' });
+                return res.status(200).send({ status: true, message: 'Success', data: finalData });
+
+            } else if (priceSort == -1) {
+                const finalData = await productModel.find(filterQueryData).sort({ price: -1 })
+                if (finalData.length == 0) return res.status(404).send({ status: false, message: 'no product found' });
+                return res.status(200).send({ status: true, message: 'Success', data: finalData });
+            }
+        }
+        const finalData = await productModel.find(filterQueryData)
+        if (finalData.length == 0) return res.status(404).send({ status: false, message: 'no product found' });
+        return res.status(200).send({ status: true, message: 'Success', data: finalData });
+    } catch (error) {
+        res.status(500).send({ status: false, error: error.message })
+    }
+}
+
+
+
 
 const updateProduct = async function (req, res) {
     try {
@@ -250,4 +308,4 @@ const deleteProduct = async (req, res) => {
     }
 }
 
-module.exports = { createProduct, getProductById, deleteProduct, updateProduct }
+module.exports = { createProduct, getProductById, deleteProduct, updateProduct, getProductsWithFilter }

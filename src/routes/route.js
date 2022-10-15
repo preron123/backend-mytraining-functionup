@@ -14,6 +14,7 @@ router.put('/user/:userId/profile',middleware.authenticationMid,userController.u
 //Products Api's
 router.post('/products',productController.createProduct)
 router.get('/products/:productId',productController.getProductById)
+router.get('/products',productController.getProductsWithFilter)
 router.put('/products/:productId',productController.updateProduct)
 router.delete('/products/:productId',productController.deleteProduct)
 
