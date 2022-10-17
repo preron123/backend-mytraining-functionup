@@ -2,6 +2,7 @@ const express=require('express');
 const router=express.Router()
 const userController=require('../controllers/userController')
 const productController=require('../controllers/productController')
+const cartController=require('../controllers/cartController')
 const middleware=require('../middelwares/authrentication')
 
 
@@ -18,6 +19,9 @@ router.get('/products',productController.getProductsWithFilter)
 router.put('/products/:productId',productController.updateProduct)
 router.delete('/products/:productId',productController.deleteProduct)
 
+router.post('/users/:userId/cart',cartController.createCart)
+router.get('/users/:userId/cart',cartController.getCart)
+router.delete('/users/:userId/cart',cartController.deleteCartById)
 
 //errorHandling for wrong address
 router.all("/**",(_, res) =>{

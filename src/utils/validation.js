@@ -4,6 +4,7 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$
 const pincodeRegex = /^[1-9][0-9]{5}$/
 const nameRegex = /^[a-z A-Z]*$/
 const priceRegex = /^\d{1,8}(?:\.\d{1,4})?$/
+const numRegex=/^[0-9]*$/
 const mongoose = require("mongoose")
 
 
@@ -47,6 +48,11 @@ const isValidPrice = (data) => {
     if (typeof data == "string" && data.trim().length !== 0 && priceRegex.test(data.trim())) return true
     return false
 }
+
+const isValidNum = (data) => {
+    if (typeof data == "number" &&data!=0 && numRegex.test(data)) return true
+    return false
+}
 const isValidSize = (data) => {
     let arr = ["S", "XS", "M", "X", "L", "XXL", "XL"]
     if (typeof data == "string" && data.trim().length !== 0 && arr.includes(data.trim())) return true
@@ -56,5 +62,5 @@ const isValidSize = (data) => {
 
 
 module.exports = {
-    isEmpty, isValidEmail, isValidPhone, isValidPassword, isValidPincode, isValidObjectId, isValidName, isValidPrice, isValidSize
+    isEmpty, isValidEmail, isValidPhone,isValidNum, isValidPassword, isValidPincode, isValidObjectId, isValidName, isValidPrice, isValidSize
 }
