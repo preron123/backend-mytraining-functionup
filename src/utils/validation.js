@@ -59,8 +59,17 @@ const isValidSize = (data) => {
     return false
 }
 
+// const isValidBody = function (data) {
+//     return Object.keys(data).length > 0;
+// };
 
+
+// const isValid = function (value) {
+//     if (typeof value !== "string") return false
+//     if (typeof value === 'string' && value.trim().length === 0) return false
+//     return true;
+// };
 
 module.exports = {
-    isEmpty, isValidEmail, isValidPhone,isValidNum, isValidPassword, isValidPincode, isValidObjectId, isValidName, isValidPrice, isValidSize
+    isEmpty, isValidEmail, isValidPhone,isValidNum, isValidPassword, isValidPincode, isValidObjectId, isValidName, isValidPrice, isValidSize,isValid,isValidBody
 }
