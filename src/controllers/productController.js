@@ -119,7 +119,7 @@ const getProductById = async (req, res) => {
 };
 
 
-const getProductsWithFilter = async (req, res) => {
+const getProduct = async (req, res) => {
     try {
         let { size, name, priceGreaterThan, priceLessThan, priceSort } = req.query;
         let filterQueryData = { isDeleted: false }
@@ -308,4 +308,4 @@ const deleteProduct = async (req, res) => {
     }
 }
 
-module.exports = { createProduct, getProductById, deleteProduct, updateProduct, getProductsWithFilter }
+module.exports = { createProduct,getProduct, getProductById,  updateProduct,deleteProduct }

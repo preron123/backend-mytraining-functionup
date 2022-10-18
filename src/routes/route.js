@@ -2,7 +2,10 @@ const express=require('express');
 const router=express.Router()
 const userController=require('../controllers/userController')
 const productController=require('../controllers/productController')
-const cartController=require('../controllers/cartController')
+
+// const {createProduct,getProduct,getProductById,updateProduct,deleteProduct} = require("../controllers/productController")
+
+const { createCart, getCart ,updateCart,deleteCart} = require("../controllers/cartController")
 const middleware=require('../middelwares/authrentication')
 
 
@@ -14,14 +17,35 @@ router.put('/user/:userId/profile',middleware.authenticationMid,userController.u
 
 //Products Api's
 router.post('/products',productController.createProduct)
-router.get('/products/:productId',productController.getProductById)
+router.get('/products/:productId',productController.getProduct)
 router.get('/products',productController.getProductsWithFilter)
 router.put('/products/:productId',productController.updateProduct)
 router.delete('/products/:productId',productController.deleteProduct)
 
-router.post('/users/:userId/cart',cartController.createCart)
-router.get('/users/:userId/cart',cartController.getCart)
-router.delete('/users/:userId/cart',cartController.deleteCartById)
+
+//================================== product apis ============================================
+
+// router.post("/products",createProduct)
+// router.get("/products",getProductsWithFilter)
+// router.get('/products/:productId', getProductById)
+// router.put('/products/:productId', updateProduct)
+// router.delete("/products/:productId", deleteProduct)
+
+
+// cart apis 
+
+router.post("/users/:userId/cart", Authentication, authorization, createCart)
+router.get("/users/:userId/cart", Authentication, authorization, getCart)
+router.put('/users/:userId/cart', Authentication, authorization, updateCart)
+router.delete('/users/:userId/cart', Authentication, authorization, deleteCart)
+
+
+
+// order apis 
+
+// router.post("/users/:userId/orders", Authentication, authorization, createOrder)
+// router.put("/users/:userId/orders", Authentication,authorization, updateOrder)
+
 
 //errorHandling for wrong address
 router.all("/**",(_, res) =>{
