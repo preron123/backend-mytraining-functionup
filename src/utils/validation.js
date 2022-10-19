@@ -70,6 +70,12 @@ const isValid = function (value) {
     return true;
 };
 
+const isValidStatus = (data) => {
+    let arr = ['pending', 'completed', 'cancelled']
+    if (typeof data == "string" && data.trim().length !== 0 && arr.includes(data.trim())) return true
+    return false
+}
+
 module.exports = {
-    isEmpty, isValidEmail, isValidPhone,isValidNum, isValidPassword, isValidPincode, isValidObjectId, isValidName, isValidPrice, isValidSize,isValid,isValidBody
+    isEmpty, isValidEmail, isValidPhone,isValidNum, isValidPassword, isValidPincode, isValidObjectId, isValidName, isValidPrice, isValidSize,isValid,isValidBody,isValidStatus
 }

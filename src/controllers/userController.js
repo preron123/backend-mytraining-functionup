@@ -120,7 +120,8 @@ const createUser = async (req, res) => {
             //create document
             let dataCreted = { fname, lname, email, phone, profileImage, address }
             dataCreted.password = hashedPassword
-            let data = await userModel.create(dataCreted)
+            let data =  userModel.create(dataCreted)
+            console.log(data)
             return res.status(201).send({ status: true, message: "User created successfully", date: data });
         }
         catch (err) {

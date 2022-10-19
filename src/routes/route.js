@@ -2,8 +2,8 @@ const express=require('express');
 const router=express.Router()
 const userController=require('../controllers/userController')
 const {createProduct,getProduct,getProductById,updateProduct,deleteProduct} = require("../controllers/productController")
-
 const { createCart, getCart ,updateCart,deleteCartById} = require("../controllers/cartController")
+const {createOrder,updateOrder}=require('../controllers/orderController')
 const middleware=require('../middelwares/authrentication')
 
 
@@ -41,8 +41,8 @@ router.delete('/users/:userId/cart',middleware.authenticationMid, deleteCartById
 
 // order apis 
 
-// router.post("/users/:userId/orders", Authentication, authorization, createOrder)
-// router.put("/users/:userId/orders", Authentication,authorization, updateOrder)
+router.post("/users/:userId/orders", createOrder)
+router.put("/users/:userId/orders", updateOrder)
 
 
 //errorHandling for wrong address

@@ -76,11 +76,6 @@ const createProduct = async function (req, res) {
                 return res.status(400).send({ status: false, message: "installments must be in decimal Number" })
             };
         }
-        if (isDeleted) {
-            if (typeof isDeleted !== "boolean" || isDeleted == true) {
-                return res.status(400).send({ status: false, message: "isDeleted Boolean only/you cant delete when product is not created" })
-            };
-        }
         //validation for productImage and creating AWS link
         let file = req.files;
         if (file && file.length > 0) {
