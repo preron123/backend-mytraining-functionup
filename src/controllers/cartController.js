@@ -204,12 +204,16 @@ const updateCart = async function (req, res) {
           }
 
           if (removeProduct == 1) {
+            if (cart[i].quantity == 1 && removeProduct == 1) {
+              const updatedPrice = await cartModel.findOneAndUpdate({ _id: cartId },{$pull: { items: { productId: productId } },totalPrice: searchCart.totalPrice - priceChange, totalItems: searchCart.totalItems - 1},{ new: true });
+              return res.status(200).send({ status: true, message: 'Success', data: updatedPrice });
+            }
+  
             cart[i].quantity = cart[i].quantity - 1;
             const updatedCart = await cartModel.findByIdAndUpdate({ _id: cartId },{ items: cart, totalPrice: cartData.totalPrice - productData.price },{ new: true });
             return res.status(200).send({ status: true, message: 'Success', data: updatedCart });
           }
         }
-        return res.status(400).send({ status: false, message: "Product does not found in the cart" });
       }
     } catch (error) {
       res.status(500).send({ msg: "Error", error: error.message});
