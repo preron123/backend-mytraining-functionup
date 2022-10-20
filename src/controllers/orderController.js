@@ -1,4 +1,4 @@
-const { isValidObjectId, isValidStatus,isValidBody,isValid } = require('../utils/validation')
+const { isValidObjectId, isValidStatus, isValidBody, isValid } = require('../utils/validation')
 const cartModel = require("../models/cartModel");
 const userModel = require('../models/userModel');
 const orderModel = require("../models/orderModel");
@@ -14,9 +14,9 @@ const createOrder = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Invalid userId" })
         }
         // //Authorization
-        // if (req.userId !== userId) {
-        //     return res.status(403).send({ status: false, message: "Authorization failed" });
-        // }
+        if (req.userId !== userId) {
+            return res.status(403).send({ status: false, message: "Access denied" });
+        }
         const userDetails = await userModel.findOne({ _id: userId })
         if (!userDetails) {
             return res.status(404).send({ status: false, msg: "user not found" })
@@ -61,52 +61,55 @@ const createOrder = async function (req, res) {
 
 
 const updateOrder = async function (req, res) {
-    userId = req.params.userId
-    body = req.body
+    try {
+        userId = req.params.userId
+        body = req.body
 
-    if (!isValidObjectId(userId))
-        return res.status(400).send({ status: false, msg: `Invalid userId` });
+        if (!isValidObjectId(userId))
+            return res.status(400).send({ status: false, msg: `Invalid userId` });
 
-    const user = await userModel.findOne({ _id: userId })
-    if (!user) return res.status(404).send({ status: false, msg: "User not found" })
-
-
-    if (!isValidBody(body))
-        return res.status(400).send({ status: false, message: "body should not be empty" })
-
-    let { orderId, status } = body
-    if (!isValid(orderId))
-        return res.status(400).send({ status: false, msg: "orderId is required" })
-    if (!isValidObjectId(orderId))
-        return res.status(400).send({ status: false, msg: `orderId ${orderId} is invalid` });
-
-    const validOrder = await orderModel.findOne({ _id: orderId })
-
-    if (!validOrder) return res.status(404).send({ status: false, message: "Order does not exists" })
-
-    if (!isValid(status))
-        return res.status(400).send({ status: false, msg: "status is required" })
-
-    if (['pending', 'completed', 'cancelled'].indexOf(status) === -1)
-        return res.status(400).send({ status: false, message: `Order status should be 'pending', 'completed', 'cancelled' ` })
+        // //Authorization
+        if (req.userId !== userId) {
+            return res.status(403).send({ status: false, message: "Access denied" });
+        }
+        const user = await userModel.findOne({ _id: userId })
+        if (!user) return res.status(404).send({ status: false, msg: "User not found" })
 
 
-    if (validOrder.status == 'cancelled')
-        return res.status(400).send({ status: false, message: "This order is already cancelled" })
+        if (!isValidBody(body)) {
+            return res.status(400).send({ status: false, message: "body should not be empty" })
+        }
+        let { orderId, status } = body
+        if (!isValid(orderId))
+            return res.status(400).send({ status: false, msg: "orderId is required" })
+        if (!isValidObjectId(orderId))
+            return res.status(400).send({ status: false, msg: `orderId ${orderId} is invalid` });
 
-    if (validOrder.status == 'completed' && status == 'pending')
-        return res.status(400).send({ status: false, message: "This order is already completed" })
+        const validOrder = await orderModel.findOne({ _id: orderId })
 
-    if (status == 'cancelled') {
-        if (validOrder.cancellable == false)
-            return res.status(400).send({ status: false, message: "This order is not cancellable." })
+        if (!validOrder) return res.status(404).send({ status: false, message: "Order does not exists" })
+
+        if (!isValid(status))
+            return res.status(400).send({ status: false, msg: "status is required" })
+
+        if (!isValidStatus(status))
+            return res.status(400).send({ status: false, message: `Order status should be 'pending', 'completed', 'cancelled' ` })
+
+        if (validOrder.status == 'completed' && status == 'pending')
+            return res.status(400).send({ status: false, message: "This order is already completed" })
+
+        if (status == 'cancelled') {
+            if (validOrder.cancellable == false)
+                return res.status(400).send({ status: false, message: "This order is not cancellable." })
+        }
+        let data = {}
+        data.status = status
+
+        let updateData = await orderModel.findOneAndUpdate({ _id: orderId }, data, { new: true })
+        return res.status(200).send({ status: true, message: "Success", data: updateData })
+    } catch (error) {
+        res.status(500).send({ msg: "Error", error: error.message });
     }
-
-    let data = {}
-    data.status = status
-
-    let updateData = await orderModel.findOneAndUpdate({ _id: orderId }, data, { new: true })
-    return res.status(200).send({ status: true, message: "Success", data: updateData })
 };
 
 

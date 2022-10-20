@@ -120,8 +120,7 @@ const createUser = async (req, res) => {
             //create document
             let dataCreted = { fname, lname, email, phone, profileImage, address }
             dataCreted.password = hashedPassword
-            let data =  userModel.create(dataCreted)
-            console.log(data)
+            let data =await userModel.create(dataCreted)
             return res.status(201).send({ status: true, message: "User created successfully", date: data });
         }
         catch (err) {
@@ -181,6 +180,10 @@ const getUser = async (req, res) => {
         if (!isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "Invalid userId" })
         }
+        //Authorization
+        if (req.userId !== userId) {
+            return res.status(403).send({ status: false, message: "Access denied" });
+        }
         let findUser = await userModel.findById(userId)
         if (!findUser) {
             return res.status(404).send({ status: false, message: "User not Found" })
@@ -208,7 +211,7 @@ const updateUser = async (req, res) => {
 
         //Authorization
         if (req.userId !== userId) {
-            return res.status(403).send({ status: false, message: "Authorization failed" });
+            return res.status(403).send({ status: false, message: "Access denied" });
         }
         //validation for emptyBody
         if (Object.keys(req.body).length == 0) {

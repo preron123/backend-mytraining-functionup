@@ -13,7 +13,7 @@ const createProduct = async function (req, res) {
         if (!title) {
             return res.status(400).send({ status: false, message: "Title Mandatory" })
         }
-        if (!isEmpty(title)) {
+        if (!isValidName(title)) {
             return res.status(400).send({ status: false, message: "Title is String only" })
         }
         let uniqueTitle = await productModel.findOne({ title })
@@ -52,15 +52,13 @@ const createProduct = async function (req, res) {
                 return res.status(400).send({ status: false, message: "isFreeShipping Boolean only" })
             };
         }
-        if (style) { //erorrrrrrrrrrrrrr
-            console.log(!isEmpty(style))
+        if (style) {
             if (!isEmpty(style)) {
-                console.log("dfbdsbfdsj")
                 return res.status(400).send({ status: false, message: "Style String only" })
             };
         }
 
-        if (!availableSizes) {////erorrrrrrrrr
+        if (!availableSizes) {
             return res.status(400).send({ status: false, msga: "give atleast one availableSizes" })
         };
         let size = availableSizes.toUpperCase().split(",") //creating an array
@@ -128,10 +126,10 @@ const getProduct = async (req, res) => {
             }
         }
         if (name) {
-            if (!isEmpty(name)) {
+            if (!isValidName(name)) {
                 return res.status(400).send({ status: false, message: "Name is String only" })
             }
-            filterQueryData['title'] = name;
+            filterQueryData['title'] = name.trim();
         }
         // all type of price filter
         if (priceGreaterThan && priceLessThan) {
