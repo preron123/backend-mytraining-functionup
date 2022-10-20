@@ -159,9 +159,9 @@ const updateCart = async function (req, res) {
          return res.status(404).send({ status: false, message: "user not found" });
       }
       // authorizing user with token's userId
-    //   if (userId !== req.userId){
-    //   return res.status(403).send({ status: false, message: "Access denied" });
-    //   }
+      if (userId !== req.userId){
+      return res.status(403).send({ status: false, message: "Access denied" });
+      }
       // destructuring fields from body
       const { cartId, productId, removeProduct } = bodyData;
   
