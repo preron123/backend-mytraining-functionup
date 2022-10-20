@@ -159,9 +159,9 @@ const updateCart = async function (req, res) {
          return res.status(404).send({ status: false, message: "user not found" });
       }
       // authorizing user with token's userId
-      if (userId !== req.userId){
-      return res.status(403).send({ status: false, message: "Access denied" });
-      }
+    //   if (userId !== req.userId){
+    //   return res.status(403).send({ status: false, message: "Access denied" });
+    //   }
       // destructuring fields from body
       const { cartId, productId, removeProduct } = bodyData;
   
@@ -205,7 +205,7 @@ const updateCart = async function (req, res) {
 
           if (removeProduct == 1) {
             if (cart[i].quantity == 1 && removeProduct == 1) {
-              const updatedPrice = await cartModel.findOneAndUpdate({ _id: cartId },{$pull: { items: { productId: productId } },totalPrice: searchCart.totalPrice - priceChange, totalItems: searchCart.totalItems - 1},{ new: true });
+              const updatedPrice = await cartModel.findOneAndUpdate({ _id: cartId },{$pull: { items: { productId: productId } },totalPrice: cartData.totalPrice - priceChange, totalItems: cartData.totalItems - 1},{ new: true });
               return res.status(200).send({ status: true, message: 'Success', data: updatedPrice });
             }
   
