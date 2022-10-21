@@ -120,8 +120,8 @@ const createUser = async (req, res) => {
             //create document
             let dataCreted = { fname, lname, email, phone, profileImage, address }
             dataCreted.password = hashedPassword
-            let data =await userModel.create(dataCreted)
-            return res.status(201).send({ status: true, message: "User created successfully", date: data });
+            let data = await userModel.create(dataCreted)
+            return res.status(201).send({ status: true, message: "User created successfully", data: data });
         }
         catch (err) {
             return res.status(400).send({ status: false, message: "address is only in JSON" });
@@ -180,15 +180,15 @@ const getUser = async (req, res) => {
         if (!isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "Invalid userId" })
         }
-        //Authorization
-        if (req.userId !== userId) {
-            return res.status(403).send({ status: false, message: "Access denied" });
-        }
+
         let findUser = await userModel.findById(userId)
         if (!findUser) {
             return res.status(404).send({ status: false, message: "User not Found" })
         }
-
+        //Authorization
+        if (req.userId !== userId) {
+            return res.status(403).send({ status: false, message: "Access denied" });
+        }
         return res.status(200).send({ status: true, message: "User profile details", data: findUser })
     }
     catch (error) {
@@ -324,7 +324,7 @@ const updateUser = async (req, res) => {
         let dataUpdated = { fname, lname, email, phone, profileImage, address }
         dataUpdated.password = hashedPassword
         let data = await userModel.findOneAndUpdate({ _id: userId }, { $set: dataUpdated }, { new: true })
-        return res.status(200).send({ status: true, message: "User profile updated", date: data });
+        return res.status(200).send({ status: true, message: "User profile updated", data: data });
 
     }
     catch (error) {

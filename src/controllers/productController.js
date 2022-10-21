@@ -1,6 +1,6 @@
 const productModel = require('../models/productModel');
 const aws = require("../utils/aws")
-const { isEmpty, isValidPrice, isValidSize, isValidObjectId } = require('../utils/validation')
+const { isEmpty, isValidPrice, isValidSize, isValidObjectId,isValidName } = require('../utils/validation')
 
 const createProduct = async function (req, res) {
     try {
@@ -84,7 +84,7 @@ const createProduct = async function (req, res) {
         }
 
         let dataCreted = await productModel.create(req.body)
-        return res.status(201).send({ status: true, message: "Product created successfully", date: dataCreted });
+        return res.status(201).send({ status: true, message: "Success", data: dataCreted });
 
     } catch (err) {
         return res.status(500).send({ status: false, message: err.message });

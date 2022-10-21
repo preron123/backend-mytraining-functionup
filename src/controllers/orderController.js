@@ -13,15 +13,15 @@ const createOrder = async function (req, res) {
         if (!isValidObjectId(userId)) {
             return res.status(400).send({ status: false, msg: "Invalid userId" })
         }
-        // //Authorization
-        if (req.userId !== userId) {
-            return res.status(403).send({ status: false, message: "Access denied" });
-        }
+
         const userDetails = await userModel.findOne({ _id: userId })
         if (!userDetails) {
             return res.status(404).send({ status: false, msg: "user not found" })
         }
-
+        // //Authorization
+        if (req.userId !== userId) {
+            return res.status(403).send({ status: false, message: "Access denied" });
+        }
         let dataFromCart = await cartModel.findOne({ userId })
         if (!dataFromCart) {
             return res.status(404).send({ status: false, message: "Cart not found" })
@@ -68,14 +68,13 @@ const updateOrder = async function (req, res) {
         if (!isValidObjectId(userId))
             return res.status(400).send({ status: false, msg: `Invalid userId` });
 
+        const user = await userModel.findOne({ _id: userId })
+        if (!user) return res.status(404).send({ status: false, msg: "User not found" })
+
         // //Authorization
         if (req.userId !== userId) {
             return res.status(403).send({ status: false, message: "Access denied" });
         }
-        const user = await userModel.findOne({ _id: userId })
-        if (!user) return res.status(404).send({ status: false, msg: "User not found" })
-
-
         if (!isValidBody(body)) {
             return res.status(400).send({ status: false, message: "body should not be empty" })
         }
