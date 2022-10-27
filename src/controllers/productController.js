@@ -117,7 +117,7 @@ const getProduct = async (req, res) => {
         let { size, name, priceGreaterThan, priceLessThan, priceSort } = req.query;
         let filterQueryData = { isDeleted: false }
         if (size) {
-            let sizes = size.toUpperCase().split(",") //creating an array
+            let sizes = size.toUpperCase().split(",") //creating an array 
             filterQueryData['availableSizes'] = sizes
             for (let i = 0; i < sizes.length; i++) {
                 if (!isValidSize(sizes[i])) {

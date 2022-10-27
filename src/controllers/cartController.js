@@ -62,11 +62,11 @@ const createCart = async (req, res) => {
             if (cart.length == 0) {
                 cart.push({ productId, quantity });
             } else {
-                for (let i = 0; i < cart.length; i++) {
+                for (let i=cart.length-1; i >=0; i--) {
                     if (cart[i].productId == productId) {
                         cart[i].quantity += quantity;
                         break;
-                    } else if (i == cart.length - 1) {
+                    } else if (i == 0 ) {
                         cart.push({ productId, quantity });
                     }
                 }

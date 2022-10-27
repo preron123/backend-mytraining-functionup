@@ -27,7 +27,7 @@ const createOrder = async function (req, res) {
             return res.status(404).send({ status: false, message: "Cart not found" })
         }
         //add data from cart
-        data.items = dataFromCart.items
+        data.items = dataFromCart.items//add items in data
         if (dataFromCart.items.length == 0) {
             return res.status(404).send({ status: false, message: "Items not found" })
         }
